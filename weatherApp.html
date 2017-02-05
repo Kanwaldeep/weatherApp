@@ -11,7 +11,7 @@
 	function showWeather(zipcode){
 		console.log(zipcode);
 		$.ajax({
-		   url: 'http://api.openweathermap.org/data/2.5/weather?APPID=d62c47e91aaa2779cb991432c05bd1c8',
+		   url: 'https://api.openweathermap.org/data/2.5/weather?APPID=d62c47e91aaa2779cb991432c05bd1c8',
 		   type: 'GET',
 		   data: 'zip='+zipcode + '&units=imperial', // or $('#myform').serializeArray()
 		   success: function(response) { 		   
