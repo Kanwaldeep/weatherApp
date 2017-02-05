@@ -1,0 +1,118 @@
+<html>
+<meta http-equiv="Content-Type" content="text/html;charset-utf-8" />
+<link href="https://fonts.googleapis.com/css?family=Amatic+SC:700|Audiowide|Julius+Sans+One|Poiret+One|Unica+One" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="style.css" />
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js">
+</script>
+<script>
+	var slideIndex = 0;
+
+	function showWeather(zipcode){
+		console.log(zipcode);
+		$.ajax({
+		   url: 'http://api.openweathermap.org/data/2.5/weather?APPID=d62c47e91aaa2779cb991432c05bd1c8',
+		   type: 'GET',
+		   data: 'zip='+zipcode + '&units=imperial', // or $('#myform').serializeArray()
+		   success: function(response) { 		   
+				var description1 = response.weather[0].description;
+				   
+				$('#description').text(description1);
+				   
+				var name1 = response.name;
+				var country = response.sys.country;
+				   
+				$('#city').text(name1 + ", " + country);
+				   
+				var weather = response.main.temp;
+				var farSign = String.fromCharCode(176)+ "F";
+				var roundedFar = Math.round(weather)
+				   
+				$('#temp').text(roundedFar + farSign);
+
+				/*var epoch = response.dt;
+				var newTime = new Date(epoch * 1000);
+				$("#dateTime").text(newTime);*/
+
+				var getHumidity = response.main.humidity;
+				$('#humidity').text( "Humidity " + getHumidity + '%');
+
+
+				if (description1.includes("clouds")) {
+					console.log("in clouds");
+					$('#weather-img').attr('src', 'images/partlySunny.png');  
+				}
+				if (description1.includes("rain")) {
+					console.log("in rain");
+					$('#weather-img').attr('src', 'images/rain.png');
+				}
+
+				if (description1.includes("clear")) {
+					console.log("clear sky");
+					$('#weather-img').attr('src', 'images/sun.png');
+				}
+
+				if (description1.includes("mist", "fog")) {
+					console.log("in mist");
+					$('#weather-img').attr('src', 'images/fog.png');
+				}
+				if (description1.includes("snow")) {
+					console.log("in snow");
+					$('#weather-img').attr('src', 'images/snow.png');
+				}
+
+				$('#weather-img-div').css("display", "block");
+			}
+		});
+	}
+
+	function carousel() {
+	    var i;
+	    var x = document.getElementsByClassName('mySlides');
+	    //hide all the images
+	    for (i = 0; i < x.length; i++) {
+	      x[i].style.display = "none"; 
+	    }
+	    slideIndex++;
+	    if (slideIndex > x.length) {
+	    	slideIndex = 1;
+	    } 
+	    var string = "url(" + x[slideIndex-1].src + ")";
+	    $('#WeatherApp').css('background', string);
+	    $('#WeatherApp').css('background-size',  '100% 100%');
+	    $('#WeatherApp').css('background-repeat',  'no-repeat');
+	    showWeather(x[slideIndex-1].name);
+	    setTimeout(carousel, 10000); // Change image every 10 seconds
+	}
+</script>
+</head>
+<body onload="carousel()">
+	<div id="WeatherApp">
+		<div class="mySlides-div">
+			<img class="mySlides" src="images/seattle.png" name="98101">
+			<img class="mySlides" src="images/nyc.jpg" name="10002">
+			<img class="mySlides" src="images/SanFrancisco.jpg"name="94102">
+			<img class="mySlides" src="images/dc.jpg" name="20013">
+			<img class="mySlides" src="images/grandCanyon.jpg" name="86023">
+			<img class="mySlides" src="images/alaska.jpg" name="99501">
+			<img class="mySlides" src="images/kgc.png" name="98030">
+		</div>
+		<h1 id="weatherTitle">What's It Like Outside?</h1>
+		<div id="zipcodeBlock">
+			<p id="zipCodeEnter"><b>Enter Zip Code:</b></p>
+			<input type="text" id="zipcode_text"></input>
+			<input type="submit" id="submit" value="submit" onclick="showWeather($('#zipcode_text').val())">
+		</div>
+		<div  id="rectangle" style="width:300px;height:500px;border:1px solid #000;">
+			<h1 id="city"></h1>
+			<h2 id="temp"></h2>
+			<!--<h2 id="dateTime"></h2>-->
+			<h3 id="description"></h3>
+			<div id = "weather-img-div" style="display:none">
+				<img id="weather-img" class="thick-green-border">
+			</div>
+			<h2 id="humidity"></h2>
+		</div>
+	</div>
+</body>
+</html>
